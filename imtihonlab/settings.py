@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #our apps
     'users',
     'tests',
+    'results',
     'attempts',
     'config',
     'core',
