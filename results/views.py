@@ -3,10 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-
 from .models import Result
 from .serializers import ResultSerializer
 from tests.models import Test
+
 
 
 class UserTestResultAPIView(APIView):
@@ -49,3 +49,19 @@ class UserTestResultAPIView(APIView):
             serializer.data,
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
         )
+
+class UserAllResultsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Auth userning barcha test resultlarini olish
+        """
+        results = Result.objects.filter(user=request.user)
+
+        serializer = ResultSerializer(results, many=True)
+
+        return Response({
+            "count": results.count(),
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
